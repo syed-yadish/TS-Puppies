@@ -6,6 +6,7 @@ import PuppiesList from "./pages/PuppiesList";
 import { AddPuppy, Puppy } from "./types";
 import { Route, Routes } from "react-router-dom";
 import PuppyDetails from "./pages/PuppyDetails";
+import EditPuppyDetails from './pages/EditPuppyDetails';
 import Home from "./pages/Home";
 import AddNewPuppy from "./pages/AddNewPuppy";
 
@@ -35,10 +36,10 @@ function App() {
       SetSuccessMessage("puppy is deleted");
       setFlag(false);
       // GetPuppiesInfo();
-      setPuppies(prev =>{
-        const data = prev.filter(puppy => puppy.id !== id)
+      setPuppies((prev) => {
+        const data = prev.filter((puppy) => puppy.id !== id);
         return data;
-      })
+      });
     }
   };
 
@@ -57,9 +58,41 @@ function App() {
       // setFlag(false);
       GetPuppiesInfo();
 
-      setTimeout(()=>{
+      setTimeout(() => {
         SetSuccessMessage("");
-      },3000)
+      }, 3000);
+    }
+  };
+
+  const editPuppy = async (editedPuppy: Puppy) => {
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(editedPuppy),
+    };
+    const response = await fetch(
+      `http://localhost:3020/api/puppies/${editedPuppy.id}`,
+      options
+    );
+    SetSuccessMessage("");
+
+    if (response.ok) {
+      SetSuccessMessage("New Puppy is edited");
+
+      setPuppies((prev: any) => {
+        const filtered: Puppy[] = prev.filter(
+          (p: Puppy) => p.id !== editedPuppy.id
+        );
+
+        return [...filtered, editedPuppy as Puppy];
+      });
+
+      setTimeout(() => {
+        SetSuccessMessage("");
+      }, 3000);
     }
   };
 
@@ -81,7 +114,24 @@ function App() {
           >
             {" "}
           </Route>
-          <Route path="/addpuppy" element={<AddNewPuppy addPuppy={addPuppy} message={successMessage}/>}>
+          <Route
+            path="/addpuppy"
+            element={
+              <AddNewPuppy addPuppy={addPuppy} message={successMessage} />
+            }
+          >
+            {" "}
+          </Route>
+          <Route
+            path="/editpuppy/:id"
+            element={
+              <EditPuppyDetails
+                editNewPuppy={editPuppy}
+                puppies={puppies}
+                message={successMessage}
+              />
+            }
+          >
             {" "}
           </Route>
           <Route

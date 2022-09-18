@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button, Card, Container, CardGroup, Row, Col } from "react-bootstrap";
 import { Puppy } from "../types";
+import { AiFillEdit } from "react-icons/ai";
 
 interface IPuppyDetails {
   puppies: Puppy[];
@@ -76,6 +77,12 @@ const PuppyDetails = ({
           </Card>
         </CardGroup>
       </Container>
+
+      <Link to={`/editpuppy/${puppy?.id}`}>
+        <button className="home-btn">
+          Edit <AiFillEdit className="home-icon" />
+        </button>
+      </Link>
 
       {flag ? (
         <Button
